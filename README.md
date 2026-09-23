@@ -10,7 +10,7 @@
 
 **foliolysis** is an institutional-grade, full-stack quantitative algorithmic backtesting, macroeconomic risk modeling, and stochastic forward projection platform engineered for Indian equities (**NSE & BSE**) and global benchmarks.
 
-Powered by a high-precision **NumPy/Pandas vectorized calculation engine**, a hardened **Node.js Express API**, and a modern **React 18 SPA** with matte Groww-inspired aesthetics, foliolysis equips traders and quantitative fund managers with the analytical rigor required to stress-test strategies across historical and simulated market regimes.
+Powered by a high-precision **NumPy/Pandas vectorized calculation engine**, a hardened **Node.js Express API**, and a modern **React 18 SPA**, foliolysis equips traders and quantitative fund managers with the analytical rigor required to stress-test strategies across historical and simulated market regimes.
 
 ---
 
@@ -27,12 +27,14 @@ graph TD
 ```
 
 ### Microservice Architecture
+
 1. **Frontend (`/frontend`)**: React 18 single-page application built with Vite, Chart.js, Three.js, Lucide Icons, domain-driven feature packaging (`@/features/*`), route-level chunking (<150KB initial bundle), and error boundaries.
 2. **Backend (`/backend`)**: Modular Node.js Express API with dedicated route domains (`backend/routes/`), `helmet` CSP, `cors` origin whitelisting, `zod` input validation, `express-rate-limit`, structured JSON logging, and JWT authentication delivered via `HttpOnly`, `SameSite=Strict`, `Secure` cookies.
 3. **Analytics Engine (`/analytics`)**: Python 3.11 FastAPI microservice computing vectorized backtests, trailing stop-losses, Value-at-Risk (VaR/CVaR), and 500+ path Geometric Brownian Motion (GBM) Monte Carlo projections.
 4. **Data Tier**: MongoDB document store with automatic in-memory persistence fallback for zero-downtime development and evaluation.
 
 ### Modular Project Layout
+
 ```
 fintech-risk-simulator/
 ├── frontend/
@@ -79,15 +81,15 @@ fintech-risk-simulator/
 
 ## ⚡ Core Platform Modules
 
-| Module | Route | Capabilities |
-| :--- | :--- | :--- |
-| **Home** | `/` | Minimalist brand showcase featuring the prominent foliolysis emblem, live NIFTY 50/SENSEX indices capsule, and instant terminal launch. |
-| **Dashboard** | `/dashboard` | Executive telemetry overview: total portfolio wealth curves, portfolio alpha vs NIFTY 50, India VIX regime monitoring, and active strategy health toggles. |
-| **Strategies** | `/strategies` | Dual SMA (20/50, 15/45) momentum sandbox, trailing stop-loss simulation, synchronized price & volume charts with buy/sell execution markers, and automated Gemini AI risk diagnostics. |
-| **Risk Analysis** | `/risk-analysis` | 95% Value-at-Risk (VaR) & Conditional VaR (Expected Shortfall), macroeconomic stress scenarios (RBI repo rate shifts, crude price spikes, market crashes), and factor sensitivities. |
-| **Simulations** | `/simulations` | 500-path Geometric Brownian Motion (GBM) Monte Carlo forward projections with bull (95th), median (50th), and bear (5th) percentile wealth boundaries and terminal wealth histograms. |
-| **Reports** | `/reports` | Interactive compliance audit dossiers with clickable rows, detailed trade logs, performance metrics (CAGR, Sharpe, Max Drawdown), and one-click CSV export. |
-| **Settings** | `/settings` | Trader profile management, INR capital limits, notifications, and broker integration status (Zerodha Kite Connect). |
+| Module            | Route            | Capabilities                                                                                                                                                                           |
+| :---------------- | :--------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Home**          | `/`              | Minimalist brand showcase featuring the prominent foliolysis emblem, live NIFTY 50/SENSEX indices capsule, and instant terminal launch.                                                |
+| **Dashboard**     | `/dashboard`     | Executive telemetry overview: total portfolio wealth curves, portfolio alpha vs NIFTY 50, India VIX regime monitoring, and active strategy health toggles.                             |
+| **Strategies**    | `/strategies`    | Dual SMA (20/50, 15/45) momentum sandbox, trailing stop-loss simulation, synchronized price & volume charts with buy/sell execution markers, and automated Gemini AI risk diagnostics. |
+| **Risk Analysis** | `/risk-analysis` | 95% Value-at-Risk (VaR) & Conditional VaR (Expected Shortfall), macroeconomic stress scenarios (RBI repo rate shifts, crude price spikes, market crashes), and factor sensitivities.   |
+| **Simulations**   | `/simulations`   | 500-path Geometric Brownian Motion (GBM) Monte Carlo forward projections with bull (95th), median (50th), and bear (5th) percentile wealth boundaries and terminal wealth histograms.  |
+| **Reports**       | `/reports`       | Interactive compliance audit dossiers with clickable rows, detailed trade logs, performance metrics (CAGR, Sharpe, Max Drawdown), and one-click CSV export.                            |
+| **Settings**      | `/settings`      | Trader profile management, INR capital limits, notifications, and broker integration status (Zerodha Kite Connect).                                                                    |
 
 ---
 
@@ -135,7 +137,9 @@ docker compose up -d --build
 # Double click or run start-all.bat in PowerShell
 .\start-all.bat
 ```
+
 This script launches all three microservices in independent terminal windows:
+
 - Python Analytics on `http://127.0.0.1:8000`
 - Express Backend on `http://localhost:5000`
 - React Frontend on `http://localhost:3000`
@@ -143,6 +147,7 @@ This script launches all three microservices in independent terminal windows:
 ### Option 3: Manual Step-by-Step Setup
 
 #### 1. Analytics Microservice (Python)
+
 ```bash
 cd analytics
 python -m venv venv
@@ -153,6 +158,7 @@ python main.py
 ```
 
 #### 2. Backend API (Node.js)
+
 ```bash
 cd backend
 npm install
@@ -160,6 +166,7 @@ npm run dev
 ```
 
 #### 3. Frontend SPA (React + Vite)
+
 ```bash
 cd frontend
 npm install
@@ -170,23 +177,23 @@ npm run dev
 
 ## 📡 API Reference
 
-| Method | Endpoint | Description | Auth Required |
-| :--- | :--- | :--- | :---: |
-| `GET` | `/health` | Liveness health check | No |
-| `GET` | `/ready` | Readiness check (validates MongoDB & Analytics) | No |
-| `POST` | `/api/auth/register` | Register new trader account | No |
-| `POST` | `/api/auth/login` | Sign in & receive HttpOnly cookie | No |
-| `GET` | `/api/auth/me` | Fetch authenticated session profile | Yes |
-| `POST` | `/api/auth/guest` | Instant Guest Sandbox activation | No |
-| `POST` | `/api/auth/logout` | Clear session cookie | No |
-| `GET` | `/api/market/overview` | Indian equity benchmarks & market movers | No |
-| `POST` | `/api/backtest/run` | Execute quantitative dual SMA backtest | Optional |
-| `GET` | `/api/backtest/history` | Historical backtest audit records | Optional |
-| `POST` | `/api/analytics/monte-carlo` | Compute 500-path GBM forward projection | Optional |
-| `ALL` | `/api/analytics/stress-test` | Macroeconomic stress scenario profiles | Optional |
-| `GET` | `/api/portfolios` | List user portfolios | Optional |
-| `POST` | `/api/portfolios` | Create customized portfolio allocation | Optional |
-| `DELETE` | `/api/portfolios/:id` | Remove portfolio record | Optional |
+| Method   | Endpoint                     | Description                                     | Auth Required |
+| :------- | :--------------------------- | :---------------------------------------------- | :-----------: |
+| `GET`    | `/health`                    | Liveness health check                           |      No       |
+| `GET`    | `/ready`                     | Readiness check (validates MongoDB & Analytics) |      No       |
+| `POST`   | `/api/auth/register`         | Register new trader account                     |      No       |
+| `POST`   | `/api/auth/login`            | Sign in & receive HttpOnly cookie               |      No       |
+| `GET`    | `/api/auth/me`               | Fetch authenticated session profile             |      Yes      |
+| `POST`   | `/api/auth/guest`            | Instant Guest Sandbox activation                |      No       |
+| `POST`   | `/api/auth/logout`           | Clear session cookie                            |      No       |
+| `GET`    | `/api/market/overview`       | Indian equity benchmarks & market movers        |      No       |
+| `POST`   | `/api/backtest/run`          | Execute quantitative dual SMA backtest          |   Optional    |
+| `GET`    | `/api/backtest/history`      | Historical backtest audit records               |   Optional    |
+| `POST`   | `/api/analytics/monte-carlo` | Compute 500-path GBM forward projection         |   Optional    |
+| `ALL`    | `/api/analytics/stress-test` | Macroeconomic stress scenario profiles          |   Optional    |
+| `GET`    | `/api/portfolios`            | List user portfolios                            |   Optional    |
+| `POST`   | `/api/portfolios`            | Create customized portfolio allocation          |   Optional    |
+| `DELETE` | `/api/portfolios/:id`        | Remove portfolio record                         |   Optional    |
 
 ---
 
@@ -203,4 +210,5 @@ cd backend && node -e "fetch('http://localhost:5000/ready').then(r=>r.json()).th
 ---
 
 ## 📄 License
+
 This project is licensed under the MIT License — see the [LICENSE](LICENSE) file for details.
