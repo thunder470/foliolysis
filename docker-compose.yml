@@ -1,0 +1,103 @@
+version: '3.8'
+
+services:
+  # 1. MongoDB Document Store
+  mongo:
+    image: mongo:7.0-alpine
+    container_name: foliolysis-mongo
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_DATABASE: foliolysis
+    volumes:
+      - mongo-data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    networks:
+      - foliolysis-network
+
+  # 2. Python Analytics Microservice
+  analytics:
+    build:
+      context: ./analytics
+      dockerfile: Dockerfile
+    container_name: foliolysis-analytics
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      - PORT=8000
+      - GEMINI_API_KEY=${GEMINI_API_KEY:-}
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    networks:
+      - foliolysis-network
+
+  # 3. Node.js Express Backend
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: foliolysis-backend
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+    environment:
+      - NODE_ENV=production
+      - PORT=5000
+      - MONGO_URI=mongodb://mongo:27017/foliolysis
+      - ANALYTICS_SERVICE_URL=http://analytics:8000
+      - JWT_SECRET=${JWT_SECRET:-foliolysis_enterprise_jwt_secret_99812491}
+      - CORS_ORIGIN=http://localhost:3000,http://localhost:80
+    depends_on:
+      mongo:
+        condition: service_healthy
+      analytics:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    networks:
+      - foliolysis-network
+
+  # 4. Frontend Nginx Web Server
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: foliolysis-frontend
+    restart: unless-stopped
+    ports:
+      - "3000:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+    networks:
+      - foliolysis-network
+
+volumes:
+  mongo-data:
+    name: foliolysis-mongo-volume
+
+networks:
+  foliolysis-network:
+    name: foliolysis-network
+    driver: bridge
