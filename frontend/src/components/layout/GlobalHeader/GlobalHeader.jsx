@@ -57,7 +57,7 @@ export default function GlobalHeader({ marketOverview }) {
     <header
       className="global-header glass-panel"
       style={{
-        padding: 'var(--space-3) var(--space-6)',
+        padding: '10px var(--space-4)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
@@ -65,36 +65,39 @@ export default function GlobalHeader({ marketOverview }) {
         top: 0,
         zIndex: 40,
         boxShadow: 'var(--shadow-card)',
-        gap: 'var(--space-4)',
+        gap: 'var(--space-3)',
         transition: 'all 0.25s ease',
+        maxWidth: '100%',
+        boxSizing: 'border-box',
       }}
     >
       {/* Left: Contextual Page Title + Clean Wrapped Subtitle */}
-      <div style={{ maxWidth: '320px', minWidth: '160px' }}>
+      <div style={{ flex: '0 0 auto', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
         <h1
           style={{
-            fontSize: '1.2rem',
+            fontSize: '1.15rem',
             fontWeight: 800,
             color: 'var(--text-primary)',
             letterSpacing: '-0.02em',
             margin: 0,
             lineHeight: 1.2,
+            whiteSpace: 'nowrap',
           }}
         >
           {headerInfo.title}
         </h1>
         <p
+          className="header-subtitle"
           style={{
             fontSize: '0.72rem',
             color: 'var(--text-muted)',
             marginTop: '2px',
             margin: 0,
             lineHeight: 1.3,
+            whiteSpace: 'nowrap',
             overflow: 'hidden',
             textOverflow: 'ellipsis',
-            display: '-webkit-box',
-            WebkitLineClamp: 1,
-            WebkitBoxOrient: 'vertical',
+            maxWidth: '380px',
           }}
         >
           {headerInfo.subtitle}
@@ -105,7 +108,7 @@ export default function GlobalHeader({ marketOverview }) {
       <BenchmarkBar marketOverview={marketOverview} />
 
       {/* Right Controls: Stock Search, ThemeToggle, Quick Backtest, User Profile */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)', flexShrink: 0 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)', flexShrink: 0, marginLeft: 'auto' }}>
         <StockSearchModal />
 
         <ThemeToggle />
@@ -114,7 +117,7 @@ export default function GlobalHeader({ marketOverview }) {
           onClick={() => navigate('/strategies')}
           className="btn-primary"
           id="header-run-backtest-btn"
-          style={{ padding: '0.45rem 0.9rem', fontSize: '0.78rem', minHeight: '36px' }}
+          style={{ padding: '0.4rem 0.75rem', fontSize: '0.76rem', minHeight: '34px', flexShrink: 0 }}
         >
           <Play size={13} fill="#FFFFFF" />
           <span className="no-wrap">+ Backtest</span>

@@ -768,8 +768,16 @@ input[type="range"]:active::-webkit-slider-thumb {
    Accessibility Focus Rings (WCAG 2.1 AA)
    ========================================================================== */
 :focus-visible {
-  outline: 2px solid var(--accent-groww) !important;
-  outline-offset: 2px !important;
+  outline: 2px solid var(--accent-groww);
+  outline-offset: 2px;
+}
+
+input:focus,
+input:focus-visible,
+textarea:focus,
+textarea:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
 }
 
 /* ==========================================================================
@@ -797,9 +805,23 @@ input[type="range"]:active::-webkit-slider-thumb {
 
 /* ==========================================================================
    Responsive Mobile Navigation & Media Queries
+/* ==========================================================================
+   Responsive Header & Mobile Navigation Media Queries
    ========================================================================== */
-@media (max-width: 900px) {
+@media (max-width: 1400px) {
+  .user-profile-details {
+    display: none !important;
+  }
+}
+
+@media (max-width: 1280px) {
   .header-marquee {
+    display: none !important;
+  }
+}
+
+@media (max-width: 1050px) {
+  .header-subtitle {
     display: none !important;
   }
 }
@@ -825,7 +847,7 @@ input[type="range"]:active::-webkit-slider-thumb {
   }
 
   .global-header {
-    padding: var(--space-3) var(--space-4) !important;
+    padding: 8px var(--space-3) !important;
   }
 
   #header-run-backtest-btn {

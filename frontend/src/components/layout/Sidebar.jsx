@@ -12,9 +12,18 @@ import {
   Home,
 } from 'lucide-react';
 
-export default function Sidebar() {
+export default function Sidebar({ marketOverview }) {
   const navigate = useNavigate();
   const { user, isGuest, setIsAuthModalOpen } = useAuth();
+
+  const nifty = marketOverview?.marketIndices?.find((i) => i.symbol === '^NSEI') || {
+    price: 24823.2,
+    changePct: 0.54,
+  };
+  const sensex = marketOverview?.marketIndices?.find((i) => i.symbol === '^BSESN') || {
+    price: 81224.8,
+    changePct: 0.48,
+  };
 
   const navItems = [
     { to: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
@@ -32,7 +41,7 @@ export default function Sidebar() {
         onClick={() => navigate('/')}
         title="foliolysis — Return to Start"
         style={{
-          padding: 'var(--space-4) var(--space-5)',
+          padding: 'var(--space-3) var(--space-4)',
           display: 'flex',
           alignItems: 'center',
           borderBottom: '1px solid var(--border-subtle)',
@@ -40,27 +49,29 @@ export default function Sidebar() {
           transition: 'background-color 0.18s ease',
         }}
       >
-        <Logo size={34} showText={true} />
+        <Logo size={32} showText={true} />
       </div>
 
       {/* Navigation Items (6 Primary Routes) */}
       <nav
         style={{
           flex: 1,
-          padding: 'var(--space-5) var(--space-3)',
+          minHeight: 0,
+          overflowY: 'auto',
+          padding: 'var(--space-3) var(--space-3)',
           display: 'flex',
           flexDirection: 'column',
-          gap: 'var(--space-1)',
+          gap: '2px',
         }}
       >
         <div
           style={{
-            fontSize: '0.68rem',
+            fontSize: '0.66rem',
             fontWeight: 700,
             color: 'var(--text-dim)',
             letterSpacing: '0.08em',
             textTransform: 'uppercase',
-            padding: 'var(--space-1) var(--space-3) var(--space-2)',
+            padding: '4px var(--space-3) 4px',
             whiteSpace: 'nowrap',
           }}
         >
@@ -75,13 +86,13 @@ export default function Sidebar() {
               to={item.to}
               className={({ isActive }) => `sidebar-link ${isActive ? 'active' : ''}`}
             >
-              <Icon size={19} strokeWidth={2.2} />
+              <Icon size={18} strokeWidth={2.2} />
               <span className="no-wrap">{item.label}</span>
             </NavLink>
           );
         })}
 
-        <div style={{ margin: 'var(--space-3) 0 var(--space-1)', borderTop: '1px solid var(--border-subtle)' }} />
+        <div style={{ margin: 'var(--space-2) 0 var(--space-1)', borderTop: '1px solid var(--border-subtle)' }} />
 
         {/* Return to Home link */}
         <NavLink
@@ -89,7 +100,7 @@ export default function Sidebar() {
           className="sidebar-link"
           style={{ color: 'var(--text-muted)' }}
         >
-          <Home size={18} strokeWidth={2} />
+          <Home size={17} strokeWidth={2} />
           <span className="no-wrap">Home</span>
         </NavLink>
       </nav>
@@ -97,7 +108,7 @@ export default function Sidebar() {
       {/* User Account & Authentication Profile Card */}
       <div
         style={{
-          padding: 'var(--space-3) var(--space-3)',
+          padding: 'var(--space-2) var(--space-3)',
           borderTop: '1px solid var(--border-subtle)',
           background: 'var(--bg-sidebar)',
         }}
@@ -108,7 +119,7 @@ export default function Sidebar() {
             display: 'flex',
             alignItems: 'center',
             gap: 'var(--space-2)',
-            padding: 'var(--space-2) var(--space-3)',
+            padding: '6px var(--space-3)',
             borderRadius: 'var(--radius-md)',
             background: 'var(--bg-card)',
             border: '1px solid var(--border-card)',
@@ -130,8 +141,8 @@ export default function Sidebar() {
         >
           <div
             style={{
-              width: '34px',
-              height: '34px',
+              width: '30px',
+              height: '30px',
               borderRadius: 'var(--radius-sm)',
               background: user.avatar ? `url(${user.avatar}) center/cover no-repeat` : 'linear-gradient(135deg, #0F172A 0%, #1E293B 100%)',
               color: '#FFFFFF',
@@ -139,7 +150,7 @@ export default function Sidebar() {
               alignItems: 'center',
               justifyContent: 'center',
               fontWeight: 800,
-              fontSize: '0.78rem',
+              fontSize: '0.75rem',
               flexShrink: 0,
             }}
           >
@@ -147,20 +158,20 @@ export default function Sidebar() {
           </div>
 
           <div style={{ flex: 1, minWidth: 0, lineHeight: 1.2 }}>
-            <div style={{ fontSize: '0.82rem', fontWeight: 800, color: 'var(--text-primary)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+            <div style={{ fontSize: '0.78rem', fontWeight: 800, color: 'var(--text-primary)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
               {user.name}
             </div>
-            <div style={{ fontSize: '0.68rem', color: isGuest ? 'var(--warning-amber)' : 'var(--accent-blue)', fontWeight: 700, marginTop: '2px' }}>
+            <div style={{ fontSize: '0.65rem', color: isGuest ? 'var(--warning-amber)' : 'var(--accent-blue)', fontWeight: 700, marginTop: '1px' }}>
               {isGuest ? 'Guest Sandbox' : user.tier}
             </div>
           </div>
         </div>
       </div>
 
-      {/* Bottom Status Pill: Live Feeds */}
+      {/* Bottom Status Card: Live NSE & BSE Points */}
       <div
         style={{
-          padding: 'var(--space-3) var(--space-3)',
+          padding: 'var(--space-2) var(--space-3) var(--space-3)',
           borderTop: '1px solid var(--border-subtle)',
           backgroundColor: 'var(--bg-sidebar)',
         }}
@@ -170,22 +181,51 @@ export default function Sidebar() {
             background: 'var(--bg-card)',
             border: '1px solid var(--border-card)',
             borderRadius: 'var(--radius-md)',
-            padding: 'var(--space-2) var(--space-3)',
+            padding: '6px var(--space-3)',
             display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
+            flexDirection: 'column',
+            gap: '4px',
             boxShadow: 'var(--shadow-xs)',
           }}
         >
-          <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}>
-            <span className="beacon-dot" />
-            <span style={{ fontSize: '0.72rem', fontWeight: 600, color: 'var(--text-secondary)', whiteSpace: 'nowrap' }}>
-              NSE/BSE Feed
+          {/* Header row: Green pulse dot + Feed label */}
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <span className="beacon-dot" />
+              <span style={{ fontSize: '0.65rem', fontWeight: 800, color: 'var(--text-muted)', letterSpacing: '0.04em', textTransform: 'uppercase' }}>
+                NSE / BSE Live
+              </span>
+            </div>
+            <span style={{ fontSize: '0.62rem', fontWeight: 700, color: 'var(--gain-green)', background: 'var(--gain-green-bg)', padding: '1px 5px', borderRadius: 'var(--radius-full)' }}>
+              Active
             </span>
           </div>
-          <span style={{ fontSize: '0.7rem', fontWeight: 700, color: 'var(--gain-green)', whiteSpace: 'nowrap' }}>
-            Active
-          </span>
+
+          {/* Points row 1: NIFTY 50 */}
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '0.72rem' }}>
+            <span style={{ fontWeight: 700, color: 'var(--text-secondary)' }}>NIFTY 50</span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+              <span className="font-mono" style={{ fontWeight: 800, color: 'var(--text-primary)' }}>
+                ₹{Number(nifty.price).toLocaleString('en-IN', { maximumFractionDigits: 1 })}
+              </span>
+              <span className="font-mono" style={{ fontSize: '0.65rem', fontWeight: 700, color: nifty.changePct >= 0 ? 'var(--gain-green)' : 'var(--loss-red)' }}>
+                {nifty.changePct >= 0 ? `+${nifty.changePct}%` : `${nifty.changePct}%`}
+              </span>
+            </div>
+          </div>
+
+          {/* Points row 2: SENSEX */}
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '0.72rem' }}>
+            <span style={{ fontWeight: 700, color: 'var(--text-secondary)' }}>SENSEX</span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+              <span className="font-mono" style={{ fontWeight: 800, color: 'var(--text-primary)' }}>
+                ₹{Number(sensex.price).toLocaleString('en-IN', { maximumFractionDigits: 1 })}
+              </span>
+              <span className="font-mono" style={{ fontSize: '0.65rem', fontWeight: 700, color: sensex.changePct >= 0 ? 'var(--gain-green)' : 'var(--loss-red)' }}>
+                {sensex.changePct >= 0 ? `+${sensex.changePct}%` : `${sensex.changePct}%`}
+              </span>
+            </div>
+          </div>
         </div>
       </div>
     </aside>

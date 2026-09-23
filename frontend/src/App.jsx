@@ -33,7 +33,7 @@ function AppLayout({ marketOverview, history, fetchGlobalData }) {
   return (
     <div className="app-shell">
       {/* 260px Fixed Sidebar with Active Route Highlighting & User Profile */}
-      <Sidebar />
+      <Sidebar marketOverview={marketOverview} />
 
       {/* Dynamic Canvas with Global Header and Route-based Suspense */}
       <div className="canvas-scrollable">

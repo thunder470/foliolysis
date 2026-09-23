@@ -92,8 +92,8 @@ export default function StockSearchModal() {
           background: 'var(--bg-input)',
           border: isSearchOpen ? '1px solid var(--accent-blue)' : '1px solid var(--border-input)',
           borderRadius: 'var(--radius-md)',
-          padding: '6px var(--space-3)',
-          width: '210px',
+          padding: '5px var(--space-2.5, 10px)',
+          width: 'clamp(120px, 13vw, 190px)',
           boxShadow: isSearchOpen ? '0 0 0 3px rgba(37, 99, 235, 0.16)' : 'var(--shadow-xs)',
           transition: 'all 0.2s ease',
         }}
@@ -111,6 +111,7 @@ export default function StockSearchModal() {
             border: 'none',
             background: 'transparent',
             outline: 'none',
+            boxShadow: 'none',
             fontSize: '0.78rem',
             color: 'var(--text-primary)',
             width: '100%',

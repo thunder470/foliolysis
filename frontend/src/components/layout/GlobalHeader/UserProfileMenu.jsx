@@ -51,7 +51,7 @@ export default function UserProfileMenu() {
           {!user.avatar && (user.name ? user.name.slice(0, 2).toUpperCase() : 'TR')}
         </div>
 
-        <div style={{ lineHeight: 1.2 }}>
+        <div style={{ lineHeight: 1.2 }} className="user-profile-details">
           <div
             style={{
               fontSize: '0.78rem',
